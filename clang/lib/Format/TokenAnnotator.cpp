@@ -2434,6 +2434,23 @@ static bool isFunctionDeclarationName(const FormatToken &Current,
   return false;
 }
 
+bool TokenAnnotator::mustBreakBeforeReturnType(const AnnotatedLine &Line) const {
+  assert(Line.MightBeFunctionDecl);
+
+  switch (Style.AlwaysBreakAfterReturnType) {
+  case FormatStyle::RTBS_None:
+    return false;
+  case FormatStyle::RTBS_All:
+  case FormatStyle::RTBS_TopLevel:
+    return true;
+  case FormatStyle::RTBS_AllDefinitions:
+  case FormatStyle::RTBS_TopLevelDefinitions:
+    return Line.mightBeFunctionDefinition();
+  }
+
+  return false;
+}
+
 bool TokenAnnotator::mustBreakForReturnType(const AnnotatedLine &Line) const {
   assert(Line.MightBeFunctionDecl);
 
@@ -2508,9 +2525,13 @@ void TokenAnnotator::calculateFormattingInformation(AnnotatedLine &Line) {
     Current->MustBreakBefore =
         Current->MustBreakBefore || mustBreakBefore(Line, *Current);
 
-    if (!Current->MustBreakBefore && InFunctionDecl &&
-        Current->is(TT_FunctionDeclarationName))
-      Current->MustBreakBefore = mustBreakForReturnType(Line);
+    if (!Current->MustBreakBefore && InFunctionDecl) {
+      // if (Current->is(TT_ReturnType???))
+      //   Current->MustBreakBefore = mustBreakBeforeReturnType(Line);
+
+      if (Current->is(TT_FunctionDeclarationName))
+        Current->MustBreakBefore = mustBreakForReturnType(Line);
+    }
 
     Current->CanBreakBefore =
         Current->MustBreakBefore || canBreakBefore(Line, *Current);
