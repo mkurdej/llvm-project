@@ -6758,6 +6758,39 @@ TEST_F(FormatTest, AlignsStringLiterals) {
                "              \"c\";");
 }
 
+TEST_F(FormatTest, BeforeReturnTypeBreakingStyle) {
+  FormatStyle Style = getLLVMStyle();
+
+  // No declarations or definitions should be moved to own line.
+  Style.AlwaysBreakBeforeReturnType = FormatStyle::RTBS_None;
+  verifyFormat("class A {\n"
+               "  inline int f() { return 1; }\n"
+               "  inline int g();\n"
+               "};\n"
+               "inline int f() { return 1; }\n"
+               "inline int g();\n",
+               Style);
+
+  // All declarations and definitions should have the attributes before return
+  // type moved to its own line.
+  Style.AlwaysBreakBeforeReturnType = FormatStyle::RTBS_All;
+  Style.TypenameMacros = {"LIST"};
+  verifyFormat("inline\n"
+               "SomeType funcdecl(LIST(uint64_t));",
+               Style);
+  verifyFormat("class A {\n"
+               "  inline\n"
+               "  int f() { return 1; }\n"
+               "  inline\n"
+               "  int g();\n"
+               "};\n"
+               "inline\n"
+               "int f() { return 1; }\n"
+               "inline\n"
+               "int g();\n",
+               Style);
+}
+
 TEST_F(FormatTest, ReturnTypeBreakingStyle) {
   FormatStyle Style = getLLVMStyle();
   // No declarations or definitions should be moved to own line.
