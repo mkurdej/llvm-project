@@ -527,8 +527,11 @@ struct FormatStyle {
   /// option is **deprecated** and is retained for backwards compatibility.
   DefinitionReturnTypeBreakingStyle AlwaysBreakAfterDefinitionReturnType;
 
-  /// The function declaration return type breaking style to use.
+  /// The function declaration breaking after return type style to use.
   ReturnTypeBreakingStyle AlwaysBreakAfterReturnType;
+
+  /// The function declaration breaking before return type style to use.
+  ReturnTypeBreakingStyle AlwaysBreakBeforeReturnType;
 
   /// If ``true``, always break before multiline string literals.
   ///
@@ -2426,6 +2429,7 @@ struct FormatStyle {
            AllowShortLambdasOnASingleLine == R.AllowShortLambdasOnASingleLine &&
            AllowShortLoopsOnASingleLine == R.AllowShortLoopsOnASingleLine &&
            AlwaysBreakAfterReturnType == R.AlwaysBreakAfterReturnType &&
+           AlwaysBreakBeforeReturnType == R.AlwaysBreakBeforeReturnType &&
            AlwaysBreakBeforeMultilineStrings ==
                R.AlwaysBreakBeforeMultilineStrings &&
            AlwaysBreakTemplateDeclarations ==
