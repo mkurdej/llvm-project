@@ -1,5 +1,5 @@
-@ RUN: %{cxx} %{flags} %{link_flags} %s -o %t.exe
-@ RUN: %t.exe
+@ RUN: %{cxx} %{flags} %{link_flags} "%s" -o "%t.exe"
+@ RUN: "%t.exe"
 @ UNSUPPORTED: no-exceptions
 
 @ PURPOSE: Check that 0x00 is a valid value for ttype encoding.  LLVM and

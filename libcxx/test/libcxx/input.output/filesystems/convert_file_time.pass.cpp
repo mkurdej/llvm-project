@@ -13,7 +13,7 @@
 
 // typedef TrivialClock file_time_type;
 
-// ADDITIONAL_COMPILE_FLAGS: -I %S/../../../../src/filesystem
+// ADDITIONAL_COMPILE_FLAGS: -I "%S/../../../../src/filesystem"
 
 #include <filesystem>
 #include <chrono>
