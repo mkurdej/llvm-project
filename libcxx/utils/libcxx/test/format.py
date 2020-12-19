@@ -96,7 +96,7 @@ def parseScript(test, preamble):
     # that file to the execution directory. Execute the copy from %S to allow
     # relative paths from the test directory.
     for dep in fileDependencies:
-        script += ['%dbg(SETUP) cd %S && cp {} "%T"'.format(dep)]
+        script += ['%dbg(SETUP) cd "%S" && cp {} "%T"'.format(dep)]
     script += preamble
     script += scriptInTest
 
@@ -235,22 +235,22 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.compile.pass.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} -fsyntax-only"
+                "%dbg(COMPILED WITH) %{cxx} \"%s\" %{flags} %{compile_flags} -fsyntax-only"
             ]
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.compile.fail.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) ! %{cxx} %s %{flags} %{compile_flags} -fsyntax-only"
+                "%dbg(COMPILED WITH) ! %{cxx} \"%s\" %{flags} %{compile_flags} -fsyntax-only"
             ]
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.link.pass.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} %{link_flags} -o \"%t.exe\""
+                "%dbg(COMPILED WITH) %{cxx} \"%s\" %{flags} %{compile_flags} %{link_flags} -o \"%t.exe\""
             ]
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.link.fail.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} -c -o \"%t.o\"",
+                "%dbg(COMPILED WITH) %{cxx} \"%s\" %{flags} %{compile_flags} -c -o \"%t.o\"",
                 "%dbg(LINKED WITH) ! %{cxx} \"%t.o\" %{flags} %{link_flags} -o \"%t.exe\""
             ]
             return self._executeShTest(test, litConfig, steps)
@@ -261,7 +261,7 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
             steps = [
                 # Note: Use -Wno-error to make sure all diagnostics are not treated as errors,
                 #       which doesn't make sense for clang-verify tests.
-                "%dbg(COMPILED WITH) %{{cxx}} %s %{{flags}} %{{compile_flags}} -fsyntax-only -Wno-error {}".format(VERIFY_FLAGS)
+                "%dbg(COMPILED WITH) %{{cxx}} \"%s\" %{{flags}} %{{compile_flags}} -fsyntax-only -Wno-error {}".format(VERIFY_FLAGS)
             ]
             return self._executeShTest(test, litConfig, steps)
         # Make sure to check these ones last, since they will match other
@@ -278,11 +278,11 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
         elif filename.endswith('.fail.cpp'):
             if supportsVerify:
                 steps = [
-                    "%dbg(COMPILED WITH) %{{cxx}} %s %{{flags}} %{{compile_flags}} -fsyntax-only -Wno-error {}".format(VERIFY_FLAGS)
+                    "%dbg(COMPILED WITH) %{{cxx}} \"%s\" %{{flags}} %{{compile_flags}} -fsyntax-only -Wno-error {}".format(VERIFY_FLAGS)
                 ]
             else:
                 steps = [
-                    "%dbg(COMPILED WITH) ! %{cxx} %s %{flags} %{compile_flags} -fsyntax-only"
+                    "%dbg(COMPILED WITH) ! %{cxx} \"%s\" %{flags} %{compile_flags} -fsyntax-only"
                 ]
             return self._executeShTest(test, litConfig, steps)
         else:

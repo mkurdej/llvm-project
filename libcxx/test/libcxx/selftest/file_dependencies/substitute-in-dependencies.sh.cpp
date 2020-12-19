@@ -8,5 +8,5 @@
 
 // Make sure that lit substitutions are expanded inside FILE_DEPENDENCIES lines.
 
-// FILE_DEPENDENCIES: %s
+// FILE_DEPENDENCIES: "%s"
 // RUN: test -e "%T/substitute-in-dependencies.sh.cpp"
