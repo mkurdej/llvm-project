@@ -79,6 +79,21 @@ class RISCVVIntrinsic {
 }
 
 let TargetPrefix = "riscv" in {
+  // We use anyint here but we only support XLen.
+  def int_riscv_vsetvli   : Intrinsic<[llvm_anyint_ty],
+                           /* AVL */  [LLVMMatchType<0>,
+                           /* VSEW */  LLVMMatchType<0>,
+                           /* VLMUL */ LLVMMatchType<0>],
+                                      [IntrNoMem, IntrHasSideEffects,
+                                       ImmArg<ArgIndex<1>>,
+                                       ImmArg<ArgIndex<2>>]>;
+  def int_riscv_vsetvlimax : Intrinsic<[llvm_anyint_ty],
+                            /* VSEW */ [LLVMMatchType<0>,
+                            /* VLMUL */ LLVMMatchType<0>],
+                                      [IntrNoMem, IntrHasSideEffects,
+                                       ImmArg<ArgIndex<0>>,
+                                       ImmArg<ArgIndex<1>>]>;
+
   // For unit stride load
   // Input: (pointer, vl)
   class RISCVUSLoad
@@ -229,6 +244,14 @@ let TargetPrefix = "riscv" in {
     let ExtendOperand = 3;
   }
 
+  // For vmv.v.v, vmv.v.x, vmv.v.i
+  // Input: (vector_in/scalar_in, vl)
+  class RISCVUnary : Intrinsic<[llvm_anyvector_ty],
+                               [llvm_any_ty, llvm_anyint_ty],
+                               [IntrNoMem] >, RISCVVIntrinsic {
+    let ExtendOperand = 1;
+  }
+
   multiclass RISCVUSLoad {
     def "int_riscv_" # NAME : RISCVUSLoad;
     def "int_riscv_" # NAME # "_mask" : RISCVUSLoadMask;
@@ -328,4 +351,25 @@ let TargetPrefix = "riscv" in {
   defm vsadd : RISCVSaturatingBinaryAAX;
   defm vssubu : RISCVSaturatingBinaryAAX;
   defm vssub : RISCVSaturatingBinaryAAX;
+
+  def int_riscv_vmv_v_v : RISCVUnary;
+  def int_riscv_vmv_v_x : RISCVUnary;
+
+  def int_riscv_vmv_x_s : Intrinsic<[LLVMVectorElementType<0>],
+                                    [llvm_anyint_ty],
+                                    [IntrNoMem]>, RISCVVIntrinsic;
+  def int_riscv_vmv_s_x : Intrinsic<[llvm_anyint_ty],
+                                    [LLVMMatchType<0>, LLVMVectorElementType<0>,
+                                     llvm_anyint_ty],
+                                    [IntrNoMem]>, RISCVVIntrinsic {
+    let ExtendOperand = 2;
+  }
+
+  def int_riscv_vfmv_f_s : Intrinsic<[LLVMVectorElementType<0>],
+                                     [llvm_anyfloat_ty],
+                                     [IntrNoMem]>, RISCVVIntrinsic;
+  def int_riscv_vfmv_s_f : Intrinsic<[llvm_anyfloat_ty],
+                                     [LLVMMatchType<0>, LLVMVectorElementType<0>,
+                                      llvm_anyint_ty],
+                                     [IntrNoMem]>, RISCVVIntrinsic;
 } // TargetPrefix = "riscv"
