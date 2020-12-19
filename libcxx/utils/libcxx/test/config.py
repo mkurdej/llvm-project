@@ -589,7 +589,7 @@ class Configuration(object):
         codesign_ident = self.get_lit_conf('llvm_codesign_identity', '')
         env_vars = ' '.join('%s=%s' % (k, pipes.quote(v)) for (k, v) in self.exec_env.items())
         exec_args = [
-            '--execdir %T',
+            '--execdir "%T"',
             '--codesign_identity "{}"'.format(codesign_ident),
             '--env {}'.format(env_vars)
         ]

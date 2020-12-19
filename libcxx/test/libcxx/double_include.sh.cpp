@@ -9,9 +9,9 @@
 
 // Test that we can include each header in two TU's and link them together.
 
-// RUN: %{cxx} -c %s -o %t.first.o %{flags} %{compile_flags}
-// RUN: %{cxx} -c %s -o %t.second.o -DWITH_MAIN %{flags} %{compile_flags}
-// RUN: %{cxx} -o %t.exe %t.first.o %t.second.o %{flags} %{link_flags}
+// RUN: %{cxx} -c "%s" -o "%t.first.o" %{flags} %{compile_flags}
+// RUN: %{cxx} -c "%s" -o "%t.second.o" -DWITH_MAIN %{flags} %{compile_flags}
+// RUN: %{cxx} -o "%t.exe" "%t.first.o" "%t.second.o" %{flags} %{link_flags}
 // RUN: %{run}
 
 // GCC 5 pretends it supports C++17 features, but some features like static_assert

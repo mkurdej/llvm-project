@@ -8,4 +8,4 @@
 
 // Make sure that the directory represented by %T exists when we run the test.
 
-// RUN: test -d %T
+// RUN: test -d "%T"
