@@ -8,8 +8,8 @@
 
 # Note: We prepend arguments with 'x' to avoid thinking there are too few
 #       arguments in case an argument is an empty string.
-# RUN: %{python} %s x%S \
-# RUN:              x%T \
+# RUN: %{python} "%s" "x%S" \
+# RUN:              "x%T" \
 # RUN:              x%{escaped_exec} \
 # RUN:              x%{escaped_cxx} \
 # RUN:              x%{escaped_flags} \

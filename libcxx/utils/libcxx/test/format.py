@@ -70,8 +70,8 @@ def parseScript(test, preamble):
 
     # Check base substitutions and add the %{build} and %{run} convenience substitutions
     _checkBaseSubstitutions(substitutions)
-    substitutions.append(('%{build}', '%{cxx} %s %{flags} %{compile_flags} %{link_flags} -o %t.exe'))
-    substitutions.append(('%{run}', '%{exec} %t.exe'))
+    substitutions.append(('%{build}', '%{cxx} "%s" %{flags} %{compile_flags} %{link_flags} -o "%t.exe"'))
+    substitutions.append(('%{run}', '%{exec} "%t.exe"'))
 
     # Parse the test file, including custom directives
     additionalCompileFlags = []
@@ -96,7 +96,7 @@ def parseScript(test, preamble):
     # that file to the execution directory. Execute the copy from %S to allow
     # relative paths from the test directory.
     for dep in fileDependencies:
-        script += ['%dbg(SETUP) cd %S && cp {} %T'.format(dep)]
+        script += ['%dbg(SETUP) cd %S && cp {} "%T"'.format(dep)]
     script += preamble
     script += scriptInTest
 
@@ -245,13 +245,13 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.link.pass.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} %{link_flags} -o %t.exe"
+                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} %{link_flags} -o \"%t.exe\""
             ]
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.link.fail.cpp'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} -c -o %t.o",
-                "%dbg(LINKED WITH) ! %{cxx} %t.o %{flags} %{link_flags} -o %t.exe"
+                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} -c -o \"%t.o\"",
+                "%dbg(LINKED WITH) ! %{cxx} \"%t.o\" %{flags} %{link_flags} -o \"%t.exe\""
             ]
             return self._executeShTest(test, litConfig, steps)
         elif filename.endswith('.verify.cpp'):
@@ -268,8 +268,8 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
         # suffixes above too.
         elif filename.endswith('.pass.cpp') or filename.endswith('.pass.mm'):
             steps = [
-                "%dbg(COMPILED WITH) %{cxx} %s %{flags} %{compile_flags} %{link_flags} -o %t.exe",
-                "%dbg(EXECUTED AS) %{exec} %t.exe"
+                "%dbg(COMPILED WITH) %{cxx} \"%s\" %{flags} %{compile_flags} %{link_flags} -o \"%t.exe\"",
+                "%dbg(EXECUTED AS) %{exec} \"%t.exe\""
             ]
             return self._executeShTest(test, litConfig, steps)
         # This is like a .verify.cpp test when clang-verify is supported,

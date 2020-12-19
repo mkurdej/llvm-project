@@ -95,7 +95,7 @@ def sourceBuilds(config, source):
     with open(test.getSourcePath(), 'w') as sourceFile:
       sourceFile.write(source)
     out, err, exitCode, timeoutInfo = _executeScriptInternal(test, ['%{build}'])
-    _executeScriptInternal(test, ['rm %t.exe'])
+    _executeScriptInternal(test, ['rm "%t.exe"'])
     return exitCode == 0
 
 @_memoizeExpensiveOperation(lambda c, p, args=None, testPrefix='': (c.substitutions, c.environment, p, args))
@@ -127,7 +127,7 @@ def programOutput(config, program, args=None, testPrefix=''):
       return actualOut
 
     finally:
-      _executeScriptInternal(test, ['rm %t.exe'])
+      _executeScriptInternal(test, ['rm "%t.exe"'])
 
 @_memoizeExpensiveOperation(lambda c, f: (c.substitutions, c.environment, f))
 def hasCompileFlag(config, flag):
@@ -190,7 +190,7 @@ def compilerMacros(config, flags=''):
       # additional macros.
       sourceFile.write("#include <cstddef>")
     unparsedOutput, err, exitCode, timeoutInfo = _executeScriptInternal(test, [
-      "%{{cxx}} %s -dM -E %{{flags}} %{{compile_flags}} {}".format(flags)
+      "%{{cxx}} \"%s\" -dM -E %{{flags}} %{{compile_flags}} {}".format(flags)
     ])
     parsedMacros = dict()
     defines = (l.strip() for l in unparsedOutput.split('\n') if l.startswith('#define '))

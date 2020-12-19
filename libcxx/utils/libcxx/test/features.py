@@ -48,7 +48,7 @@ DEFAULT_FEATURES = [
   #       build against now-invalid cached headers from a previous build.
   Feature(name='modules-support',
           when=lambda cfg: hasCompileFlag(cfg, '-fmodules'),
-          actions=lambda cfg: [AddCompileFlag('-fmodules-cache-path=%t/ModuleCache')]),
+          actions=lambda cfg: [AddCompileFlag('-fmodules-cache-path="%t/ModuleCache"')]),
 
   Feature(name='non-lockfree-atomics',
           when=lambda cfg: sourceBuilds(cfg, """
