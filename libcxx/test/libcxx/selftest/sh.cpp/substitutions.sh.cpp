@@ -13,8 +13,8 @@
 // - %{link_flags}
 // - %{exec}
 
-// RUN: %{cxx} %s %{flags} %{compile_flags} %{link_flags} -o %t.exe
-// RUN: %{exec} %t.exe "HELLO"
+// RUN: %{cxx} "%s" %{flags} %{compile_flags} %{link_flags} -o "%t.exe"
+// RUN: %{exec} "%t.exe" "HELLO"
 
 #include <cassert>
 #include <string>
