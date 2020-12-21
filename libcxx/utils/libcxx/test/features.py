@@ -146,7 +146,7 @@ DEFAULT_FEATURES += [
 DEFAULT_FEATURES += [
   Feature(name='host-has-gdb',
     when=lambda cfg: shutil.which('gdb') is not None,
-    actions=[AddSubstitution('%{gdb}', lambda cfg: shutil.which('gdb'))]
+    actions=[AddSubstitution('%{gdb}', lambda cfg: '"{}"'.format(shutil.which('gdb')))]
   )
 ]
 
