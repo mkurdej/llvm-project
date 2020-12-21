@@ -191,7 +191,7 @@ class CxxStandardLibraryTest(lit.formats.TestFormat):
             substitutions, and that produces an executable named %t.exe.
 
         %{run}
-            Equivalent to `%{exec} %t.exe`. This is intended to be used
+            Equivalent to `%{exec} "%t.exe"`. This is intended to be used
             in conjunction with the %{build} substitution.
     """
     def getTestsInDirectory(self, testSuite, pathInSuite, litConfig, localConfig):
